@@ -12,20 +12,23 @@ jobs:
     env:
       DOCKER_USER: ${{vars.DOCKER_USER}}
       DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+    outputs:
+      CURR_DTTM: ${{steps.set-curr-dttm.outputs.curr_dttm}}
     steps:
     - uses: actions/checkout@v3
+    - name: Set CURR_DTTM
+      id: set-curr-dttm
+      run: echo "::set-output name=curr_dttm::$(date +%Y%m%d_%H%M%S)"
     - name: Docker Login
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Build Docker Image
       run: |
-        export CURR_DTTM=$(date +%Y%m%d_%H%M%S)
-        echo $CURR_DTTM
-        docker build . --file Dockerfile --tag $DOCKER_USER/ubuntu-py-aws-git:$CURR_DTTM
-        docker tag $DOCKER_USER/ubuntu-py-aws-git:$CURR_DTTM $DOCKER_USER/ubuntu-py-aws-git:latest
+        docker build . --file Dockerfile --tag $DOCKER_USER/ubuntu-py-aws-git:${{outputs.CURR_DTTM}}
+        docker tag $DOCKER_USER/ubuntu-py-aws-git:${{outputs.CURR_DTTM}} $DOCKER_USER/ubuntu-py-aws-git:latest
     - name: Check Images
       run: docker images
     - name: Push Docker Image
       run: |
-        docker push $DOCKER_USER/ubuntu-py-aws-git:$CURR_DTTM
+        docker push $DOCKER_USER/ubuntu-py-aws-git:${{outputs.CURR_DTTM}}
         docker push $DOCKER_USER/ubuntu-py-aws-git:latest
