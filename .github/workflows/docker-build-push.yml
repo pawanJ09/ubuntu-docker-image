@@ -20,9 +20,9 @@ jobs:
     - name: Build Docker Image
       run: |
         echo "CURR_DTTM=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_ENV
+        echo $GITHUB_ENV
         docker build . --file Dockerfile --tag $DOCKER_USER/ubuntu-py-aws-git:${{env.CURR_DTTM}}
         docker tag $DOCKER_USER/ubuntu-py-aws-git:${{env.CURR_DTTM}} $DOCKER_USER/ubuntu-py-aws-git:latest
-        echo $GITHUB_ENV
     - name: Check Images
       run: docker images
     - name: Push Docker Image
