@@ -1,8 +1,12 @@
-name: Docker Image Build & Push
+name: Docker Image Build
 
 on:
-  push:
+  pull_request:
     branches: [ "main" ]
+  push:
+    branches:
+      - '*'
+      - '!main'
 
 jobs:
   build:
@@ -24,9 +28,3 @@ jobs:
       run: |
         docker build . --file Dockerfile --tag $DOCKER_USER/ubuntu-py-aws-git:${{steps.set-curr-dttm.outputs.curr_dttm}}
         docker tag $DOCKER_USER/ubuntu-py-aws-git:${{steps.set-curr-dttm.outputs.curr_dttm}} $DOCKER_USER/ubuntu-py-aws-git:latest
-    - name: Check Images
-      run: docker images
-    - name: Push Docker Image
-      run: |
-        docker push $DOCKER_USER/ubuntu-py-aws-git:${{steps.set-curr-dttm.outputs.curr_dttm}}
-        docker push $DOCKER_USER/ubuntu-py-aws-git:latest
