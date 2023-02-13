@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build-push:
     runs-on: ubuntu-latest
     env:
       DOCKER_USER: ${{vars.DOCKER_USER}}
