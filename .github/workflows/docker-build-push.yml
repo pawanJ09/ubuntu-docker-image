@@ -19,13 +19,13 @@ jobs:
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Build Docker Image
       run: |
-        echo "CURR_DTTM=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_ENV
-        echo $GITHUB_ENV
-        docker build . --file Dockerfile --tag $DOCKER_USER/ubuntu-py-aws-git:${{env.CURR_DTTM}}
-        docker tag $DOCKER_USER/ubuntu-py-aws-git:${{env.CURR_DTTM}} $DOCKER_USER/ubuntu-py-aws-git:latest
+        export CURR_DTTM=$(date +%Y%m%d_%H%M%S)
+        echo $CURR_DTTM
+        docker build . --file Dockerfile --tag $DOCKER_USER/ubuntu-py-aws-git:$CURR_DTTM
+        docker tag $DOCKER_USER/ubuntu-py-aws-git:$CURR_DTTM $DOCKER_USER/ubuntu-py-aws-git:latest
     - name: Check Images
       run: docker images
     - name: Push Docker Image
       run: |
-        docker push $DOCKER_USER/ubuntu-py-aws-git:${{env.CURR_DTTM}}
+        docker push $DOCKER_USER/ubuntu-py-aws-git:$CURR_DTTM
         docker push $DOCKER_USER/ubuntu-py-aws-git:latest
