@@ -13,16 +13,16 @@ jobs:
     - uses: actions/checkout@v3
     - name: Docker Login
       env:
-        DOCKER_USER: ${{secrets.DOCKER_USER}}
+        DOCKER_USER: ${{env.DOCKER_USER}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Build Docker Image
       run: |
         curr_dttm = $(date +%Y%m%d_%H%M%S)
-        docker build . --file Dockerfile --tag ${{secrets.DOCKER_USER}}/ubuntu-py-aws-git:"$curr_dttm"
-        docker tag ${{secrets.DOCKER_USER}}/ubuntu-py-aws-git:"$curr_dttm" ${{secrets.DOCKER_USER}}/ubuntu-py-aws-git:latest
+        docker build . --file Dockerfile --tag ${{env.DOCKER_USER}}/ubuntu-py-aws-git:"$curr_dttm"
+        docker tag ${{env.DOCKER_USER}}/ubuntu-py-aws-git:"$curr_dttm" ${{env.DOCKER_USER}}/ubuntu-py-aws-git:latest
     - name: Push Docker Image
       run: |
-        docker push ${{secrets.DOCKER_USER}}/ubuntu-py-aws-git:"$curr_dttm"
-        docker push ${{secrets.DOCKER_USER}}/ubuntu-py-aws-git:latest
+        docker push ${{env.DOCKER_USER}}/ubuntu-py-aws-git:"$curr_dttm"
+        docker push ${{env.DOCKER_USER}}/ubuntu-py-aws-git:latest
