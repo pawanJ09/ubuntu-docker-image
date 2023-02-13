@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  my-ubuntu-svc:
+    image: pawanj09/ubuntu-py-aws-git:latest
+    #build: .
+    container_name: my-ubuntu-svc
+    tty: true
+    env_file:
+      - .final-aws.env
+    volumes:
+      - ~/.ssh/id_rsa:/root/.ssh/id_rsa
+      - ~/.ssh/id_rsa.pub:/root/.ssh/id_rsa.pub
+
+volumes:
+  ssh_key:
+    driver: local
