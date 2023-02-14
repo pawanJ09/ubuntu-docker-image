@@ -21,8 +21,8 @@ jobs:
       id: check-files
       run: |
         echo "========== check paths of modified files =========="
-        git_version=$(git --version)
-        echo "$git_version"
+        echo "$(git --version)"
+        echo "$(git log --pretty=oneline)"
         git diff --name-only HEAD~1 HEAD > files.txt
         while IFS= read -r file
         do
