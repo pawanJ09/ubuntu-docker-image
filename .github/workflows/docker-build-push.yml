@@ -16,20 +16,13 @@ jobs:
       id: set-curr-dttm
       run: |
         curr_dttm=$(date +%Y%m%d_%H%M%S)
-        echo "curr_dttm=$curr_dttm" >> $GITHUB_OUTPUT 
-    - name: Docker Login
-      run: |
-        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-    - name: Build Docker Image
-      run: |
-        docker build . --file Dockerfile --tag $DOCKER_USER/ubuntu-py-aws-git:${{steps.set-curr-dttm.outputs.curr_dttm}}
-        docker tag $DOCKER_USER/ubuntu-py-aws-git:${{steps.set-curr-dttm.outputs.curr_dttm}} $DOCKER_USER/ubuntu-py-aws-git:latest
-    - name: Check Images
-      run: docker images
-    - name: check modified files
+        echo "curr_dttm=$curr_dttm" >> $GITHUB_OUTPUT
+    - name: Check if Dockerfile is modified
       id: check-files
       run: |
         echo "========== check paths of modified files =========="
+        git_version=$(git --version)
+        echo "$git_version"
         git diff --name-only HEAD~1 HEAD > files.txt
         while IFS= read -r file
         do
@@ -40,6 +33,17 @@ jobs:
             break
           fi
         done < files.txt
+    - name: Docker Login
+      if: steps.check-files.outputs.run_job == 'true'
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - name: Build Docker Image
+      if: steps.check-files.outputs.run_job == 'true'
+      run: |
+        docker build . --file Dockerfile --tag $DOCKER_USER/ubuntu-py-aws-git:${{steps.set-curr-dttm.outputs.curr_dttm}}
+        docker tag $DOCKER_USER/ubuntu-py-aws-git:${{steps.set-curr-dttm.outputs.curr_dttm}} $DOCKER_USER/ubuntu-py-aws-git:latest
+    - name: Check Images
+      run: docker images
     - name: Push Docker Image
       if: steps.check-files.outputs.run_job == 'true'
       run: |
