@@ -1,3 +1,4 @@
 # Ignore hidden en files
 .*.env
+*.txt
 settings.json

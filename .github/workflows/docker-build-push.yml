@@ -26,7 +26,22 @@ jobs:
         docker tag $DOCKER_USER/ubuntu-py-aws-git:${{steps.set-curr-dttm.outputs.curr_dttm}} $DOCKER_USER/ubuntu-py-aws-git:latest
     - name: Check Images
       run: docker images
+    - name: check modified files
+      id: check-files
+      run: |
+        echo "========== check paths of modified files =========="
+        git diff --name-only HEAD^ HEAD > files.txt
+        while IFS= read -r file
+        do
+          echo $file
+          if [[ $file == 'Dockerfile' ]]; then
+            echo "Dockerfile is modified"
+            echo "run_job=true" >> $GITHUB_OUTPUT
+            break
+          fi
+        done < files.txt
     - name: Push Docker Image
+      if: steps.check-files.outputs.run_job == 'true'
       run: |
         docker push $DOCKER_USER/ubuntu-py-aws-git:${{steps.set-curr-dttm.outputs.curr_dttm}}
         docker push $DOCKER_USER/ubuntu-py-aws-git:latest

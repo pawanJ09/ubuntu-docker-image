@@ -12,7 +12,9 @@ services:
     volumes:
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
       - ~/.ssh/id_rsa.pub:/root/.ssh/id_rsa.pub
+      - git_repos:/root/repos
 
 volumes:
-  ssh_key:
+  git_repos:
+    name: git-repos
     driver: local
