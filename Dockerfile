@@ -20,6 +20,9 @@ RUN unzip awscliv2.zip
 RUN ./aws/install
 RUN rm -f awscliv2.zip
 
+#Disable strict Host checking for github
+RUN git config --global core.sshCommand 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+
 ENTRYPOINT ["/bin/bash"]
 
 

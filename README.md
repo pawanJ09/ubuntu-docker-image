@@ -18,3 +18,8 @@ After the container is started you can connect using the command as below:
 ```shell
 docker exec -it my-ubuntu-svc /bin/bash
 ```
+
+To start the container by taking the latest image pull run the script as below:
+```shell
+/bin/bash ./run-docker-compose.sh pull
+```

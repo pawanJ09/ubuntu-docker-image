@@ -3,7 +3,8 @@ version: '3.8'
 services:
   my-ubuntu-svc:
     image: pawanj09/ubuntu-py-aws-git:latest
-    #build: .
+    build: .
+    #pull_policy: always
     container_name: my-ubuntu-svc
     tty: true
     env_file:
